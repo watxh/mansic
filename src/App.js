@@ -51,8 +51,8 @@ const App = () => {
       let top = window.getComputedStyle(box).top;
       let left = window.getComputedStyle(box).left;
 
-      let x = parseInt((parseFloat(left) / parseFloat(Boxwidth)) * 1920);
-      let y = parseInt((parseFloat(top) / parseFloat(Boxheight)) * 1080);
+      let x = parseInt((parseFloat(left) / parseFloat(Boxwidth)) * 640);
+      let y = parseInt((parseFloat(top) / parseFloat(Boxheight)) * 480);
 
       Xrows.push(x);
       Yrows.push(y);
@@ -76,7 +76,7 @@ const App = () => {
     <Container>
       <Container1>
         <DeskImage
-          src="/image/test.png"
+          src="/image/test2.jpg"
           width="100%"
           height="auto"
           id="mainimage"
@@ -148,7 +148,9 @@ const Box = styled.div`
   height: 120px;
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 3;
-  position: relative;
+  position: absolute;
+  top: 300px;
+  left: 1000px;
   margin-left: 10px;
   margin-right: 10px;
   margin-bottom: 10px;
