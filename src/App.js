@@ -1,6 +1,7 @@
 import { isAbsolute } from "path";
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
+import axios from "axios";
 
 const App = () => {
   const [num, setNum] = useState(0);
