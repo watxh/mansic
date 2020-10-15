@@ -39,8 +39,12 @@ const App = () => {
   const getPos = async () => {
     const widthdata = document.getElementById("box" + 0).clientWidth;
     const heightdata = document.getElementById("box" + 0).clientHeight;
-    const Xrows = [];
-    const Yrows = [];
+
+    const params = new URLSearchParams({
+      deskWidth: widthdata,
+      deskHeight: heightdata,
+    });
+
     for (let i = 0; i < num; i++) {
       const box = document.getElementById("box" + i);
 
@@ -53,19 +57,8 @@ const App = () => {
       let x = parseInt((parseFloat(left) / parseFloat(Boxwidth)) * 640);
       let y = parseInt((parseFloat(top) / parseFloat(Boxheight)) * 480);
 
-      Xrows.push(x);
-      Yrows.push(y);
-    }
-    console.log(Xrows, Yrows, widthdata, heightdata);
-
-    const params = new URLSearchParams({
-      deskWidth: widthdata,
-      deskHeight: heightdata,
-    });
-
-    for (let j = 0; j < num; j++) {
-      params.append("deskX", Xrows[j]);
-      params.append("deskY", Yrows[j]);
+      params.append("deskX", x);
+      params.append("deskY", y);
     }
 
     const posting = await axios.post(
