@@ -37,11 +37,10 @@ const App = () => {
   };
 
   const getPos = async () => {
-    const Xrows = [];
-    const Yrows = [];
     const widthdata = document.getElementById("box" + 0).clientWidth;
     const heightdata = document.getElementById("box" + 0).clientHeight;
-
+    const Xrows = [];
+    const Yrows = [];
     for (let i = 0; i < num; i++) {
       const box = document.getElementById("box" + i);
 
@@ -60,11 +59,14 @@ const App = () => {
     console.log(Xrows, Yrows, widthdata, heightdata);
 
     const params = new URLSearchParams({
-      deskX: Xrows,
-      deskY: Yrows,
       deskWidth: widthdata,
       deskHeight: heightdata,
     });
+
+    for (let j = 0; j < num; j++) {
+      params.append("deskX", Xrows[j]);
+      params.append("deskY", Yrows[j]);
+    }
 
     const posting = await axios.post(
       "https://mansic-back.herokuapp.com/api/plus",
