@@ -43,6 +43,7 @@ const App = () => {
     const params = new URLSearchParams({
       deskWidth: widthdata,
       deskHeight: heightdata,
+      deskNum: num,
     });
 
     for (let i = 0; i < num; i++) {
