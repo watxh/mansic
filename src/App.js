@@ -54,8 +54,8 @@ const App = () => {
       let x = parseInt((parseFloat(left) / parseFloat(Boxwidth)) * 640);
       let y = parseInt((parseFloat(top) / parseFloat(Boxheight)) * 480);
 
-      Xrows.push(x);
-      Yrows.push(y);
+      Xrows.push({ x });
+      Yrows.push({ y });
     }
     console.log(Xrows, Yrows, widthdata, heightdata);
 
