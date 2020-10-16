@@ -9,6 +9,14 @@ const App = () => {
 
   const [inter, setInter] = useState({ now: 0, j: 0 });
 
+  const [data, setData] = useState("");
+
+  const [mystr, setMystr] = useState("");
+
+  const [login, setLogin] = useState(0);
+
+  const [id, setId] = useState("");
+
   useEffect(() => {
     let testing = function test(pos) {
       let box = document.getElementById("box" + inter.j);
@@ -28,6 +36,36 @@ const App = () => {
     }
   }, [inter]);
 
+  const randomStr = (m) => {
+    var m = m || 9;
+    var s = "";
+    var r = "abcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i = 0; i < m; i++) {
+      s += r.charAt(Math.floor(Math.random() * r.length));
+    }
+    setMystr(s);
+    return s;
+  };
+
+  const checkID = async () => {
+    const idarray = (
+      await axios.get("https://mansic-back.herokuapp.com/api/search")
+    ).data;
+    for (let i = 0; i < idarray.length; i++) {
+      if (idarray[i].id === id) {
+        setLogin(1);
+      }
+    }
+  };
+
+  const getImage = async () => {
+    const img = (
+      await axios.get("https://mansic-back.herokuapp.com/api/getimage")
+    ).data;
+    console.log(img[0].image);
+    setData(img[0].image);
+  };
+
   const changeNum = (e) => {
     setNum(e.target.value);
   };
@@ -41,6 +79,7 @@ const App = () => {
     const heightdata = document.getElementById("box" + 0).clientHeight;
 
     const params = new URLSearchParams({
+      id: id,
       deskWidth: widthdata,
       deskHeight: heightdata,
       deskNum: num,
@@ -62,8 +101,8 @@ const App = () => {
       params.append("deskY", y);
     }
 
-    const posting = await axios.post(
-      "https://mansic-back.herokuapp.com/api/plus",
+    const posting = await axios.patch(
+      `https://mansic-back.herokuapp.com/api/change/${id}`,
       params
     );
   };
@@ -99,13 +138,28 @@ const App = () => {
           })()}
         </BoxContainer>
       </Container1>
-
+      <button onClick={getPos}>asdasd</button>
       <Container2>
         <input type="number" value={num} onChange={changeNum} />
         <input type="number" value={size} onChange={changeSize} />
-        <br />
-        <button onClick={getPos}>완료</button>
       </Container2>
+      {!login ? (
+        <Login>
+          <LoginBox>
+            <LoginInput
+              type="text"
+              placeholder="제품 번호를 입력하세요"
+              value={id}
+              onChange={(e) => {
+                setId(e.target.value);
+              }}
+            />
+            <button onClick={checkID}>완료</button>
+          </LoginBox>
+        </Login>
+      ) : (
+        <div>logined</div>
+      )}
     </Container>
   );
 };
@@ -125,6 +179,33 @@ const Container1 = styled.div`
 
 const Container2 = styled.div`
   width: 30%;
+`;
+
+const Login = styled.div`
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+`;
+
+const LoginBox = styled.div`
+  position: fixed;
+  margin-left: 50%;
+  top: 200px;
+  left: -150px;
+  width: 300px;
+  height: 200px;
+  border-radius: 10px;
+  background-color: white;
+`;
+
+const LoginInput = styled.input`
+  margin-top: 80px;
+  margin-left: 50px;
+  width: 200px;
+  height: 30px;
+  z-index: 1000;
 `;
 
 const DeskImage = styled.img`
