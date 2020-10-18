@@ -17,6 +17,8 @@ const App = () => {
 
   const [id, setId] = useState("");
 
+  const [result, setResult] = useState(null);
+
   useEffect(() => {
     let testing = function test(pos) {
       let box = document.getElementById("box" + inter.j);
@@ -107,6 +109,19 @@ const App = () => {
     );
   };
 
+  const getResult = async () => {
+    const result = (
+      await axios.get(`https://mansic-back.herokuapp.com/api/search`)
+    ).data;
+    let data = [];
+    for (let i = 0; i < result.length; i++) {
+      if (result[i].id === id) {
+        data = result[i].result;
+      }
+    }
+    setResult(data);
+  };
+
   return (
     <Container>
       <Container1>
@@ -138,10 +153,27 @@ const App = () => {
           })()}
         </BoxContainer>
       </Container1>
-      <button onClick={getPos}>asdasd</button>
+
       <Container2>
+        <ResultButton onClick={getPos}>책상 위치 변경하기</ResultButton> <br />
+        <ResultButton onClick={getResult}>이전 책상 위치 사용하기</ResultButton>
         <input type="number" value={num} onChange={changeNum} />
         <input type="number" value={size} onChange={changeSize} />
+        {login && result ? (
+          <ResultContainer>
+            {result.map((data, num) => {
+              return (
+                <>
+                  {num + 1}번 학생
+                  {data ? <> 자습 중</> : <> 미아</>}
+                  <br />
+                </>
+              );
+            })}
+          </ResultContainer>
+        ) : (
+          <>fgh</>
+        )}
       </Container2>
       {!login ? (
         <Login>
@@ -158,7 +190,7 @@ const App = () => {
           </LoginBox>
         </Login>
       ) : (
-        <div>logined</div>
+        <></>
       )}
     </Container>
   );
@@ -179,14 +211,22 @@ const Container1 = styled.div`
 
 const Container2 = styled.div`
   width: 30%;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+`;
+
+const ResultContainer = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const Login = styled.div`
   width: 100%;
   height: 100%;
-  position: fixed;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 10;
+  position: fixed;
 `;
 
 const LoginBox = styled.div`
@@ -205,12 +245,15 @@ const LoginInput = styled.input`
   margin-left: 50px;
   width: 200px;
   height: 30px;
-  z-index: 1000;
+`;
+
+const ResultButton = styled.button`
+  width: 100px;
+  height: 40px;
 `;
 
 const DeskImage = styled.img`
   position: absolute;
-  z-index: 2;
   pointer-events: none;
 `;
 
