@@ -19,6 +19,8 @@ const App = () => {
 
   const [result, setResult] = useState(null);
 
+  const [get, setGet] = useState(0);
+
   useEffect(() => {
     let testing = function test(pos) {
       let box = document.getElementById("box" + inter.j);
@@ -77,6 +79,9 @@ const App = () => {
   };
 
   const getPos = async () => {
+    if (num === 0) {
+      return 0;
+    }
     const widthdata = document.getElementById("box" + 0).clientWidth;
     const heightdata = document.getElementById("box" + 0).clientHeight;
 
@@ -107,6 +112,8 @@ const App = () => {
       `https://mansic-back.herokuapp.com/api/change/${id}`,
       params
     );
+
+    setGet(1);
   };
 
   const getResult = async () => {
@@ -155,10 +162,22 @@ const App = () => {
       </Container1>
 
       <Container2>
-        <ResultButton onClick={getPos}>책상 위치 변경하기</ResultButton> <br />
-        <ResultButton onClick={getResult}>이전 책상 위치 사용하기</ResultButton>
-        <input type="number" value={num} onChange={changeNum} />
-        <input type="number" value={size} onChange={changeSize} />
+        <ResultButton onClick={getPos}>책상위치 변경</ResultButton> <br />
+        {get === 1 ? (
+          <ResultButton onClick={getResult}>인공지능 실행</ResultButton>
+        ) : (
+          <ResultButton onClick={getResult}>
+            인공지능 실행(이전 위치)
+          </ResultButton>
+        )}
+        <InputLine>
+          책상 개수 :
+          <InputBox type="number" value={num} onChange={changeNum} />
+        </InputLine>
+        <InputLine>
+          책상 크기 :
+          <InputBox type="number" value={size} onChange={changeSize} />
+        </InputLine>
         {login && result ? (
           <ResultContainer>
             {result.map((data, num) => {
@@ -172,7 +191,7 @@ const App = () => {
             })}
           </ResultContainer>
         ) : (
-          <>fgh</>
+          <></>
         )}
       </Container2>
       {!login ? (
@@ -186,7 +205,8 @@ const App = () => {
                 setId(e.target.value);
               }}
             />
-            <button onClick={checkID}>완료</button>
+            <HelpText>테스트용 제품번호 : abcde</HelpText>
+            <OKBox onClick={checkID}>완료</OKBox>
           </LoginBox>
         </Login>
       ) : (
@@ -214,6 +234,34 @@ const Container2 = styled.div`
   display: flex;
   flex-direction: column;
   z-index: 2;
+`;
+
+const HelpText = styled.div`
+  font-size: 10px;
+  margin-left: 50px;
+  color: gray;
+`;
+
+const OKBox = styled.button`
+  margin-left: 50px;
+  margin-top: 10px;
+`;
+
+const InputLine = styled.div`
+  display: flex;
+  flex-direction: row;
+  line-height: 40px;
+  margin-top: 20px;
+`;
+
+const InputBox = styled.input`
+  margin-left: 10px;
+  width: 130px;
+  height: 40px;
+  background-color: #f8f8f8;
+  border: none;
+  border-radius: 10px;
+  padding-left: 10px;
 `;
 
 const ResultContainer = styled.div`
